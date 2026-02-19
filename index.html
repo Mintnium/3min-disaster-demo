@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3分防災デモ</title>
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9fafb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-top: 20px;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.hidden {
+  display: none;
+}
+</style>
+</head>
+<body>
 
+<div class="container">
+
+<div id="startScreen">
+  <h1>3分防災デモ</h1>
+  <p>今すぐできる3分防災を体験してみましょう。</p>
+  <button onclick="startMission()">始める</button>
+</div>
+
+<div id="missionScreen" class="hidden">
+  <h2>今日の3分防災</h2>
+  <p>家族と災害時の集合場所を1つ決める</p>
+  <input type="text" id="answer" placeholder="集合場所を入力してください">
+  <button onclick="completeMission()">完了</button>
+</div>
+
+<div id="completeScreen" class="hidden">
+  <h2>お疲れさまでした！</h2>
+  <p>あなたは3分防災を実行しました。</p>
+  <button onclick="shareRelay()">リレーする</button>
+</div>
+
+</div>
+
+<script>
+function startMission() {
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("missionScreen").classList.remove("hidden");
+}
+
+function completeMission() {
+  const answer = document.getElementById("answer").value;
+  if (!answer) {
+    alert("集合場所を入力してください");
+    return;
+  }
+  document.getElementById("missionScreen").classList.add("hidden");
+  document.getElementById("completeScreen").classList.remove("hidden");
+}
+
+function shareRelay() {
+  const shareText = "私は3分防災を実行しました。\nあなたも今すぐ3分でできる防災をやってみませんか？";
+  if (navigator.share) {
+    navigator.share({
+      title: "3分防災デモ",
+      text: shareText,
+      url: window.location.href
+    });
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    alert("URLをコピーしました。共有してください。");
+  }
+}
+</script>
+
+</body>
+</html>
