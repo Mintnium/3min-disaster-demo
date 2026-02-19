@@ -248,128 +248,6 @@ input {
       <button class="primary" id="startButton" type="button">始める</button>
     </section>
 
-    <section id="missionScreen" class="screen">
-      <h2>3分防災ミッション</h2>
-      <p class="mission-content">倒れそうな家具を一つ見つける</p>
-      <div class="options" id="options"></div>
-      <input id="otherInput" type="text" placeholder="その他を入力してください">
-      <button class="primary" id="completeButton" type="button">完了</button>
-    </section>
-
-    <section id="completeScreen" class="screen">
-      <p class="complete-message">よくやった！
-3分防災を続けていざという時に備えよう！</p>
-      <button class="primary" id="shareButton" type="button">リレーする</button>
-    </section>
-  </main>
-
-  <script>
-    (function () {
-      const screens = {
-        start: document.getElementById('startScreen'),
-        mission: document.getElementById('missionScreen'),
-        complete: document.getElementById('completeScreen')
-      };
-
-      const optionNames = ['食器棚', '本棚', 'タンス', 'テレビ', '冷蔵庫', '電子レンジ', 'パソコン・モニター', 'その他'];
-      const selectedOptions = new Set();
-      const optionsContainer = document.getElementById('options');
-      const otherInput = document.getElementById('otherInput');
-      const startButton = document.getElementById('startButton');
-      const completeButton = document.getElementById('completeButton');
-      const shareButton = document.getElementById('shareButton');
-
-      if (!screens.start || !screens.mission || !screens.complete || !optionsContainer || !otherInput || !startButton || !completeButton || !shareButton) {
-        return;
-      }
-
-      function showScreen(name) {
-        Object.values(screens).forEach((screen) => {
-          screen.classList.remove('active');
-        });
-        screens[name].classList.add('active');
-      }
-
-      function toggleOtherInput() {
-        const otherSelected = selectedOptions.has('その他');
-        otherInput.style.display = otherSelected ? 'block' : 'none';
-        if (!otherSelected) {
-          otherInput.value = '';
-        }
-      }
-
-      function renderOptions() {
-        optionsContainer.innerHTML = '';
-
-        optionNames.forEach((name) => {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'option';
-          button.textContent = name;
-          button.setAttribute('aria-pressed', 'false');
-
-          button.addEventListener('click', () => {
-            if (selectedOptions.has(name)) {
-              selectedOptions.delete(name);
-              button.classList.remove('selected');
-              button.setAttribute('aria-pressed', 'false');
-            } else {
-              selectedOptions.add(name);
-              button.classList.add('selected');
-              button.setAttribute('aria-pressed', 'true');
-            }
-
-            toggleOtherInput();
-          });
-
-          optionsContainer.appendChild(button);
-        });
-      }
-
-      function completeMission() {
-        const hasSelection = selectedOptions.size > 0;
-        const otherSelected = selectedOptions.has('その他');
-        const otherValue = otherInput.value.trim();
-
-        if (!hasSelection || (otherSelected && otherValue.length === 0)) {
-          alert('ミッションの対象を1つ以上入力してください。');
-          return;
-        }
-
-        showScreen('complete');
-      }
-
-      async function relayShare() {
-        const shareData = {
-          title: '3分防災デモ',
-          text: '私は3分防災を実行しました。\nあなたも今すぐ3分でできる防災をやってみませんか？',
-          url: 'https://mintnium.github.io/3min-bousai-demo/'
-        };
-
-        if (navigator.share) {
-          try {
-            await navigator.share(shareData);
-            return;
-          } catch (error) {
-            if (error && error.name === 'AbortError') {
-              return;
-            }
-          }
-        }
-
-        try {
-          await navigator.clipboard.writeText(window.location.href);
-        } catch (error) {
-          const helper = document.createElement('textarea');
-          helper.value = window.location.href;
-          helper.style.position = 'fixed';
-          helper.style.opacity = '0';
-          document.body.appendChild(helper);
-          helper.select();
-          document.execCommand('copy');
-          document.body.removeChild(helper);
-        }
-
 <div class="container">
 
 <div id="startScreen">
@@ -423,6 +301,126 @@ function shareRelay() {
   }
 }
 </script>
+    <section id="missionScreen" class="screen">
+      <h2>3分防災ミッション</h2>
+      <p class="mission-content">倒れそうな家具を一つ見つける</p>
+      <div class="options" id="options"></div>
+      <input id="otherInput" type="text" placeholder="その他を入力してください">
+      <button class="primary" id="completeButton" type="button">完了</button>
+    </section>
+
+    <section id="completeScreen" class="screen">
+      <p class="complete-message">よくやった！
+3分防災を続けていざという時に備えよう！</p>
+      <button class="primary" id="shareButton" type="button">リレーする</button>
+    </section>
+  </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      const screens = {
+        start: document.getElementById('startScreen'),
+        mission: document.getElementById('missionScreen'),
+        complete: document.getElementById('completeScreen')
+      };
+      const optionsContainer = document.getElementById('options');
+      const otherInput = document.getElementById('otherInput');
+      const startButton = document.getElementById('startButton');
+      const completeButton = document.getElementById('completeButton');
+      const shareButton = document.getElementById('shareButton');
+
+      if (!screens.start || !screens.mission || !screens.complete || !optionsContainer || !otherInput || !startButton || !completeButton || !shareButton) {
+        return;
+      }
+
+      const optionNames = ['食器棚', '本棚', 'タンス', 'テレビ', '冷蔵庫', '電子レンジ', 'パソコン・モニター', 'その他'];
+      const selectedOptions = new Set();
+
+      function showScreen(name) {
+        Object.values(screens).forEach(function (screen) {
+          screen.classList.remove('active');
+        });
+        screens[name].classList.add('active');
+      }
+
+      function syncOtherInput() {
+        const enabled = selectedOptions.has('その他');
+        otherInput.style.display = enabled ? 'block' : 'none';
+        if (!enabled) {
+          otherInput.value = '';
+        }
+      }
+
+      function renderOptions() {
+        optionsContainer.textContent = '';
+
+        optionNames.forEach(function (name) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'option';
+          button.textContent = name;
+          button.setAttribute('aria-pressed', 'false');
+
+          button.addEventListener('click', function () {
+            const isSelected = selectedOptions.has(name);
+            if (isSelected) {
+              selectedOptions.delete(name);
+            } else {
+              selectedOptions.add(name);
+            }
+            button.classList.toggle('selected', !isSelected);
+            button.setAttribute('aria-pressed', String(!isSelected));
+            syncOtherInput();
+          });
+
+          optionsContainer.appendChild(button);
+        });
+      }
+
+      function completeMission() {
+        const hasSelection = selectedOptions.size > 0;
+        const requiresOther = selectedOptions.has('その他');
+        const otherValue = otherInput.value.trim();
+
+        if (!hasSelection || (requiresOther && !otherValue)) {
+          alert('ミッションの対象を1つ以上入力してください。');
+          return;
+        }
+
+        showScreen('complete');
+      }
+
+      async function relayShare() {
+        const shareData = {
+          title: '3分防災デモ',
+          text: '私は3分防災を実行しました。\nあなたも今すぐ3分でできる防災をやってみませんか？',
+          url: 'https://mintnium.github.io/3min-bousai-demo/'
+        };
+
+        if (navigator.share) {
+          try {
+            await navigator.share(shareData);
+            return;
+          } catch (error) {
+            if (error && error.name === 'AbortError') {
+              return;
+            }
+          }
+        }
+
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+        } catch (error) {
+          const helper = document.createElement('textarea');
+          helper.value = window.location.href;
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.appendChild(helper);
+          helper.select();
+          document.execCommand('copy');
+          document.body.removeChild(helper);
+        }
+
         alert('URLをコピーしました。共有してください。');
       }
 
@@ -431,8 +429,10 @@ function shareRelay() {
       });
       completeButton.addEventListener('click', completeMission);
       shareButton.addEventListener('click', relayShare);
+
       renderOptions();
-    }());
+      syncOtherInput();
+    });
   </script>
 </body>
 </html>
