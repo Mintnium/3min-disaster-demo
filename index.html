@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>3分防災リレー体験版</title>
   <style>
     :root {
-      --bg-start: #c44537;
-      --bg-end: #f0b437;
+      --bg-start: #D65C4A;
+      --bg-end: #FACB69;
       --card: rgba(255, 255, 255, 0.14);
       --text: #fff8f2;
       --button-bg: #f3ece4;
@@ -21,11 +21,16 @@
       box-sizing: border-box;
     }
 
+    html,
+    body {
+      min-height: 100%;
+      background: linear-gradient(180deg, var(--bg-start) 0%, #de7a3b 48%, var(--bg-end) 100%);
+    }
+
     body {
       margin: 0;
-      min-height: 100vh;
+      min-height: 100dvh;
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
-      background: linear-gradient(180deg, var(--bg-start) 0%, #de7a3b 48%, var(--bg-end) 100%);
       color: var(--text);
       display: grid;
       place-items: center;
